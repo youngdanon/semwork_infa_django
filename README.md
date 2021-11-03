@@ -1,0 +1,1 @@
+# semwork_infa_django
