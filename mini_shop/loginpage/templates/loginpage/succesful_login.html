@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}Успешно{% endblock %}
+{%block pagename%}Успешно!{%endblock%}
+{% block short_description %}Вы успешно вошли в систему{% endblock %}
+
+{% block content %}
+<p class="text-center">Сейчас вы можете<a href="{{ previous_link| safe}}">вернуться</a></p>
+{%endblock%}
