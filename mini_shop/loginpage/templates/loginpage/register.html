@@ -9,11 +9,16 @@
 
 <!--Register-->
 <div class="container py-3">
-	<form method="POST">
-		{% csrf_token %}
-		{{ register_form|crispy }}
-		<button class="btn btn-primary" type="submit">Зарегистрироваться</button>
-	</form>
-	<p class="text-center">Если у вас уже есть аккаунт, <a href="{% url 'login' %}">авторизуйтесь</a></p>
+    <form method="POST">
+        {% csrf_token %}
+        {{ register_form|crispy }}
+        <div class="col text-center">
+            <button class="btn btn-primary " type="submit">Зарегистрироваться</button>
+        </div>
+    </form>
+
+    <p class="text-center">Если у вас уже есть аккаунт, <a href="{% url 'login' %}">авторизуйтесь</a></p>
+
+
 </div>
 {% endblock %}

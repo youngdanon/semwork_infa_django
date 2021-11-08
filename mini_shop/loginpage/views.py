@@ -18,7 +18,8 @@ def register_request(request):
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful.")
-            return render(request, template_name="loginpage/succesful_login.html", context=request.GET.get('next'))
+            return render(request, template_name="loginpage/succesful_login.html",
+                          context={'previous_page': request.GET.get('next')})
         messages.error(request, "Unsuccessful registration. Invalid information.")
         return render(request, template_name="loginpage/register.html",
                       context={"form_errors": form.errors, "register_form": form})
@@ -36,7 +37,9 @@ def login_request(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}.")
-                return render(request, template_name="loginpage/succesful_login.html")
+                print(request.GET.get('next'))
+                return render(request, template_name="loginpage/succesful_login.html",
+                              context={'previous_page': request.GET.get('next')})
             else:
                 messages.error(request, "Invalid username or password.")
         else:
