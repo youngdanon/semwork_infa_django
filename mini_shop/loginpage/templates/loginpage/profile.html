@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Личный кабинет{% endblock %}
+{%block pagename%}Личный кабинет{%endblock%}
+{% block short_description %}Вся информация о вас{% endblock %}
+{% block content%}
+<div class="container py-3">
+    <h6>Никнейм: <span class="fs-5 text-muted">{{nickname | safe}}</span></h6>
+    <h6>Почта: <span class="fs-5 text-muted">{{email | safe}}</span></h6>
+    <h6>Пол: <span class="fs-5 text-muted">{{gender | safe}}</span></h6>
+    <h6>Дата рождения: <span class="fs-5 text-muted">{{birth_date | safe}}</span></h6>
+</div>
+<p><a href="{% url 'logout'%}">Выйти</a></p>
+{% endblock %}

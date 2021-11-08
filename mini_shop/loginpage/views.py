@@ -1,9 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .forms import NewUserForm
-from django.contrib.auth import login
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model
 
 
 # Create your views here.
@@ -46,3 +47,19 @@ def login_request(request):
             messages.error(request, "Invalid username or password.")
     form = AuthenticationForm()
     return render(request=request, template_name="loginpage/login.html", context={"login_form": form})
+
+
+@login_required(login_url='/accounts/login')
+def profile(request):
+    print(request.user.username)
+    context = {'nickname': request.user.username,
+               'email': request.user.email,
+               'gender': 'Мужчина' if request.user.gender == 'm' else 'Женщина',
+               'birth_date': request.user.date_of_birth}
+    return render(request=request, template_name="loginpage/profile.html", context=context)
+
+
+@login_required(login_url='/accounts/login')
+def logout_view(request):
+    logout(request)
+    return redirect('/')
