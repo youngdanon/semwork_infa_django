@@ -20,8 +20,8 @@ class CustomUser(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
-    firstname = models.CharField('Name', max_length=30)
-    lastname = models.CharField('Lastname', max_length=30)
+    firstname = models.CharField('Name', max_length=30, default='')
+    lastname = models.CharField('Lastname', max_length=30, default='')
     avatar = models.ImageField('avatar', upload_to='assets/avatars/', default='assets/no_avatar.png')
     genders = (('m', 'Мужчина'),
                ('f', 'Женщина'))
@@ -29,3 +29,5 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+

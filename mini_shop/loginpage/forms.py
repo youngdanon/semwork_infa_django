@@ -24,12 +24,10 @@ class NewUserForm(forms.Form):
                                 widget=forms.PasswordInput,
                                 label='Повторите пароль')
 
-    remember_me = forms.BooleanField(label='Запомнить меня')
-
-
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
+        print(password1, password2)
         if password1 != password2:
             raise forms.ValidationError("Пароли не совпадают")
 
@@ -54,7 +52,7 @@ class NewUserForm(forms.Form):
         default_passwords = ['qwerty', '12345']
         if len(password) < 8:
             raise forms.ValidationError('Пароль должен содержать более 8 символов')
-
+        return password
         # if password in default_passwords:
         #     raise forms.ValidationError('Слишком простой пароль')
 
@@ -82,6 +80,6 @@ class LoginForm(forms.Form):
             user_password = User.objects.get(username=user_login).password
         except User.DoesNotExist:
             user_password = User.objects.get(email=user_login).password
-        if check_password(password, user_password):
+        if not check_password(password, user_password):
             raise forms.ValidationError('Неверный пароль')
-
+        return user_password
