@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход{% endblock %}
+{% block pagename %}Авторизация{% endblock %}
+{% block short_description %}Здесь вы можете войти в аккаунт{% endblock %}
+{% block content %}
+    <p><b>Имя пользователя: </b>{{ user_profile.user.username }}</p>
+    <p><b>Полное имя: </b>{{ user_profile.user.firstname}} {{ user_profile.user.firstname }}</p>
+    <p><b>Эл. адрес: </b>{{ user_profile.user.email}}</p>
+    {% load crispy_forms_tags %}
+    {{ context }}
+    <!--Login-->
+    <div class="container py-3 ">
+        <form method="POST">
+            {% csrf_token %}
+            {{ edit_form|crispy }}
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+        </form>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Админ{% endblock %}
+{% block pagename %}Админпанель{% endblock %}
+{% block short_description %}Управление правами{% endblock %}
+{% block content %}
+    <table>
+        {% for username, role in users %}
+            <tr>
+                <td><a href="{% url 'adminpanel' %}user/{{ username }}">{{ username }} </a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

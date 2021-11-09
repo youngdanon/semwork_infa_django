@@ -9,20 +9,12 @@ User = CustomUser
 # Create your forms here.
 
 class NewUserForm(forms.Form):
-    email = forms.EmailField(required=True,
-                             label='Адрес электронной почты')
-
-    username = forms.CharField(required=True,
-                               label='Имя пользователя')
-
-    password1 = forms.CharField(required=True,
-                                widget=forms.PasswordInput,
-                                label='Пароль',
-                                help_text='Пароль должен быть длиннее 8 символов')
-
-    password2 = forms.CharField(required=True,
-                                widget=forms.PasswordInput,
-                                label='Повторите пароль')
+    email = forms.EmailField(required=True, label='Адрес электронной почты')
+    username = forms.CharField(required=True, label='Имя пользователя')
+    password1 = forms.CharField(required=True, widget=forms.PasswordInput,
+                                label='Пароль', help_text='Не менее 8-ми символов')
+    password2 = forms.CharField(required=True, widget=forms.PasswordInput, label='Повторите пароль')
+    remember_me = forms.BooleanField(required=False, label='Запомнить это устройство')
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
@@ -60,18 +52,18 @@ class NewUserForm(forms.Form):
 class LoginForm(forms.Form):
     user_login = forms.CharField(required=True, label='Имя пользователя или почта')
     password = forms.CharField(required=True, widget=forms.PasswordInput, label='Ваш пароль')
-    remember_me = forms.BooleanField(required=False, label='Запомнить меня')
+    remember_me = forms.BooleanField(required=False, label='Запомнить это устройство')
 
     def clean_user_login(self):
         user_login = self.cleaned_data.get("user_login")
         try:
-            User.objects.get(username=user_login)
+            user = User.objects.get(username=user_login)
         except User.DoesNotExist:
             try:
-                User.objects.get(email=user_login)
+                user = User.objects.get(email=user_login)
             except User.DoesNotExist:
                 raise forms.ValidationError('Неверный Email или имя пользователя')
-        return user_login
+        return user.username
 
     def clean_password(self):
         user_login = self.cleaned_data.get("user_login")
@@ -79,7 +71,47 @@ class LoginForm(forms.Form):
         try:
             user_password = User.objects.get(username=user_login).password
         except User.DoesNotExist:
-            user_password = User.objects.get(email=user_login).password
+            try:
+                user_password = User.objects.get(email=user_login).password
+            except User.DoesNotExist:
+                raise forms.ValidationError('')
         if not check_password(password, user_password):
             raise forms.ValidationError('Неверный пароль')
         return user_password
+
+
+class ChangeProfileForm(forms.Form):
+    firstname = forms.CharField(label='Имя')
+    lastname = forms.CharField(label='Фамилия')
+
+class ChangePassForm(forms.Form):
+    old_password = forms.CharField(required=True,
+                                   widget=forms.PasswordInput,
+                                   label='Старый пароль')
+
+    new_password1 = forms.CharField(required=True,
+                                    widget=forms.PasswordInput,
+                                    label='Новый пароль')
+    new_password2 = forms.CharField(required=True,
+                                    widget=forms.PasswordInput,
+                                    label='Повторите новый пароль')
+
+    def clean_old_password(self):
+        login = self.initial.get('login')
+        old_hashed_password = CustomUser.objects.get(username=login).password
+        old_password = self.cleaned_data.get('old_password')
+        if not check_password(old_password, old_hashed_password):
+            raise forms.ValidationError('Вы ввели неправильный пароль')
+
+    def clean_new_password1(self):
+        password = self.cleaned_data.get("new_password1")
+        default_passwords = ['qwerty', '12345']
+        if len(password) < 8:
+            raise forms.ValidationError('Пароль должен содержать более 8 символов')
+        return password
+
+    def clean_new_password2(self):
+        password1 = self.cleaned_data.get("new_password1")
+        password2 = self.cleaned_data.get("new_password2")
+        if password1 != password2:
+            raise forms.ValidationError("Пароли не совпадают")
