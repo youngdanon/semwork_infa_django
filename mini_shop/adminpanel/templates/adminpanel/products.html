@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Админ{% endblock %}
+{% block pagename %}Админпанель{% endblock %}
+{% block short_description %}Товары{% endblock %}
+{% block content %}
+    <p><a href="">Изменить товары</a></p>
+    <p><a href="">Добавить товар</a></p>
+
+    <table>
+        {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td><a href="{% url 'adminpanel' %}product/{{ product.pk }}">{{ product.name }} </a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

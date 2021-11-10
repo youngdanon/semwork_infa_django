@@ -2,6 +2,7 @@ from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from .forms import NewUserForm, LoginForm, ChangePassForm, ChangeProfileForm
 from .models import CustomUser, Profile
+from django.core.exceptions import PermissionDenied
 
 
 # Create your views here.
@@ -133,15 +134,15 @@ def change_profile_request(request):
                           initial={'avatar': avatar, 'firstname': firstname, 'lastname': lastname})})
     else:
         filled_form = ChangeProfileForm(request.POST, request.FILES)
-        print(filled_form.data, "++++++++++++++++++++++++++++++++++++++++++++++++++++==")
         if filled_form.is_valid():
             profile.avatar = filled_form.cleaned_data.get("avatar")
             profile.firstname = filled_form.cleaned_data.get("firstname")
             profile.lastname = filled_form.cleaned_data.get("lastname")
             profile.save()
             return render(request=request, template_name='loginpage/change_profile.html',
-                          context={'change_profile': filled_form})
-
+                          context={'change_profile': ChangeProfileForm(
+                              initial={'avatar': profile.avatar, 'firstname': profile.firstname,
+                                       'lastname': profile.lastname})})
         else:
             return render(request=request, template_name='loginpage/change_profile.html',
                           context={'form_errors': filled_form.errors, 'change_profile': filled_form})
@@ -155,7 +156,8 @@ def profile(request):
                'nickname': user_profile.user.username,
                'email': user_profile.user.email,
                'firstname': user_profile.firstname,
-               'lastname': user_profile.lastname}
+               'lastname': user_profile.lastname,
+               'role': user.role}
     return render(request=request, template_name="loginpage/profile.html", context=context)
 
 

@@ -4,7 +4,7 @@
 {% block pagename %}Личный кабинет{% endblock %}
 {% block short_description %}Вся информация о вас{% endblock %}
 {% block content %}
-    <div class="container py-3 text-center" width="50%">
+    <div class="container py-3 text-center col-sm-12 col-md-10 col-lg-4">
         {% if avatar == "/static/no_avatar.png" %}
             <img src="{{ avatar }}" width="150px" height="150px" class="rounded-circle" alt="Profile photo">
         {% else %}
@@ -14,9 +14,29 @@
         <h1><span class="fs-4">{{ firstname }} {{ lastname }}</span></h1>
         <h6><span class="fs-5 text-muted">{{ nickname | safe }}</span></h6>
         <h6>Почта: <span class="fs-5 text-muted">{{ email | safe }}</span></h6>
-        <p><a href="{% url 'change_profile' %}">Изменить профиль</a></p>
-        <p><a href="{% url 'change_password' %}">Изменить пароль</a></p>
-        <p><a href="{% url 'logout' %}">Выйти</a></p>
+        <div class="card mb-4 rounded-3 shadow-sm">
+            <div class="card-header py-3">
+                <h4 class="my-0 fw-normal fs-5">Вы можете</h4>
+            </div>
+            <div class="card-body">
+                {% if role %}
+                    <p><a href="{% url 'adminpanel' %}">
+                        <button type="button" class="w-100 btn btn-lg btn-outline-primary">Перейти на панель админа
+                        </button>
+                    </a></p>
+                {% endif %}
+
+                <p><a href="{% url 'change_profile' %}">
+                    <button type="button" class="w-100 btn btn-lg btn-outline-primary">Изменить профиль</button>
+                </a></p>
+                <p><a href="{% url 'change_password' %}">
+                    <button type="button" class="w-100 btn btn-lg btn-outline-primary">Изменить пароль</button>
+                </a></p>
+                <p><a href="{% url 'logout' %}">
+                    <button type="button" class="w-100 btn btn-lg btn-outline-primary">Выйти</button>
+                </a></p>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

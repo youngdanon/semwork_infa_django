@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Изменение товара{% endblock %}
+{% block pagename %}Изменение товара{% endblock %}
+{% block short_description %}Здесь вы можете изменить товар{% endblock %}
+{% block content %}
+    {% load crispy_forms_tags %}
+    {{ context }}
+    <!--Login-->
+    <div class="container py-3 ">
+        <form method="POST">
+            {% csrf_token %}
+            {{ product_edit_form|crispy }}
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+        </form>
+    </div>
+
+{% endblock %}
