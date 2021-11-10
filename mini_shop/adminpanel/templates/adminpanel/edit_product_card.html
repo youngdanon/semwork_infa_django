@@ -13,6 +13,7 @@
             {{ product_edit_form|crispy }}
             <button class="btn btn-primary" type="submit">Сохранить</button>
         </form>
+        <p><a href="{% url 'adminpanel' %}products/delete/{{ product_id }}">Удалить товар</a></p>
     </div>
 
 {% endblock %}

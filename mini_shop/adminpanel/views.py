@@ -51,8 +51,28 @@ def display_products_request(request):
 
 
 def display_product_info_request(request, product_id):
-    product = Product.objects.get(id=product_id)
-    return None
+    product = Product.objects.get(pk=product_id)
+    context = {'name': product.name, 'description': product.description, 'price': product.price, 'type': product.type,
+               'weight': product.weight}
+    if request.method == 'GET':
+        form = ProductForm(initial=context)
+        return render(request=request, template_name='adminpanel/edit_product_card.html',
+                      context={'product_edit_form': form, 'product_id': product_id})
+    else:
+        filled_form = ProductForm(request.POST)
+        if filled_form.is_valid():
+            product.name = filled_form.cleaned_data.get('name')
+            product.description = filled_form.cleaned_data.get('description')
+            product.price = filled_form.cleaned_data.get('price')
+            product.type = filled_form.cleaned_data.get('type')
+            product.weight = filled_form.cleaned_data.get('weight')
+            product.save()
+            return render(request=request, template_name='adminpanel/edit_product_card.html',
+                          context={'product_edit_form': filled_form, 'product_id': product_id})
+        else:
+            return render(request=request, template_name='adminpanel/edit_product_card.html',
+                          context={'product_edit_form': filled_form, 'form_errors': filled_form.errors,
+                                   'product_id': product_id})
 
 
 def add_product_request(request):
@@ -74,3 +94,8 @@ def add_product_request(request):
         else:
             return render(request=request, template_name='adminpanel/add_product.html',
                           context={'addproduct_form': filled_form, 'form_errors': filled_form.errors})
+
+
+def delete_product_request(request, product_id):
+    Product.objects.filter(pk=product_id).delete()
+    return redirect('products')
