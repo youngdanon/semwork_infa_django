@@ -4,15 +4,25 @@
 {% block pagename %}Админпанель{% endblock %}
 {% block short_description %}Управление правами{% endblock %}
 {% block content %}
-    <p><a href="{% url 'products' %}">Изменить товары</a></p>
+
+    <p><a href="{% url 'products' %}">Показать товары</a></p>
     <p><a href="{% url 'add_product' %}">Добавить товар</a></p>
 
-    <table>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">username</th>
+            <th scope="col">is admin?</th>
+        </tr>
+        </thead>
+        <tbody>
         {% for username, role in users %}
             <tr>
-                <td><a href="{% url 'adminpanel' %}user/{{ username }}">{{ username }} </a></td>
+                <th scope="row"><a href="{% url 'adminpanel' %}user/{{ username }}">{{ username }} </a></th>
                 <td>{{ role }}</td>
             </tr>
         {% endfor %}
+        </tbody>
     </table>
 {% endblock %}

@@ -4,13 +4,20 @@
 {% block pagename %}Админпанель{% endblock %}
 {% block short_description %}Товары{% endblock %}
 {% block content %}
-    <p><a href="">Изменить товары</a></p>
-    <p><a href="">Добавить товар</a></p>
+    <p><a href="{% url 'adminpanel' %}">Назад</a></p>
+    <p><a href="{% url 'add_product' %}">Добавить товар</a></p>
 
-    <table>
+     <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">ProductID</th>
+            <th scope="col">ProductName</th>
+        </tr>
+        </thead>
+        <tbody>
         {% for product in products %}
             <tr>
-                <td>{{ product.id }}</td>
+                <th scope="row">{{ product.id }}</th>
                 <td><a href="{% url 'adminpanel' %}product/{{ product.pk }}">{{ product.name }} </a></td>
             </tr>
         {% endfor %}
