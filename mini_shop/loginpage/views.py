@@ -1,6 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
-from .forms import NewUserForm, LoginForm, ChangePassForm
+from .forms import NewUserForm, LoginForm, ChangePassForm, ChangeProfileForm
 from .models import CustomUser, Profile
 
 
@@ -118,6 +118,33 @@ def change_password_request(request):
 
             return render(request, template_name="loginpage/login.html",
                           context={"form_errors": filled_form.errors, "login_form": filled_form})
+
+
+@login_required
+def change_profile_request(request):
+    user = CustomUser.objects.get(username=request.COOKIES.get('login'))
+    profile = Profile.objects.get(user=user)
+    firstname = profile.firstname
+    lastname = profile.lastname
+    avatar = profile.avatar
+    if request.method == 'GET':
+        return render(request=request, template_name='loginpage/change_profile.html',
+                      context={'change_profile': ChangeProfileForm(
+                          initial={'avatar': avatar, 'firstname': firstname, 'lastname': lastname})})
+    else:
+        filled_form = ChangeProfileForm(request.POST, request.FILES)
+        print(filled_form.data, "++++++++++++++++++++++++++++++++++++++++++++++++++++==")
+        if filled_form.is_valid():
+            profile.avatar = filled_form.cleaned_data.get("avatar")
+            profile.firstname = filled_form.cleaned_data.get("firstname")
+            profile.lastname = filled_form.cleaned_data.get("lastname")
+            profile.save()
+            return render(request=request, template_name='loginpage/change_profile.html',
+                          context={'change_profile': filled_form})
+
+        else:
+            return render(request=request, template_name='loginpage/change_profile.html',
+                          context={'form_errors': filled_form.errors, 'change_profile': filled_form})
 
 
 @login_required

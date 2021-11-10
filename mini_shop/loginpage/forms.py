@@ -81,8 +81,10 @@ class LoginForm(forms.Form):
 
 
 class ChangeProfileForm(forms.Form):
+    avatar = forms.ImageField(label='Аватар')
     firstname = forms.CharField(label='Имя')
     lastname = forms.CharField(label='Фамилия')
+
 
 class ChangePassForm(forms.Form):
     old_password = forms.CharField(required=True,

@@ -5,10 +5,16 @@
 {% block short_description %}Вся информация о вас{% endblock %}
 {% block content %}
     <div class="container py-3 text-center" width="50%">
-        <img src="{{ avatar }}" width="150px" height="150px" class="rounded-circle" alt="Profile photo">
+        {% if avatar == "/static/no_avatar.png" %}
+            <img src="{{ avatar }}" width="150px" height="150px" class="rounded-circle" alt="Profile photo">
+        {% else %}
+            <img src="/media/{{ avatar }}" width="150px" height="150px" class="rounded-circle" alt="Profile photo">
+        {% endif %}
+
         <h1><span class="fs-4">{{ firstname }} {{ lastname }}</span></h1>
         <h6><span class="fs-5 text-muted">{{ nickname | safe }}</span></h6>
         <h6>Почта: <span class="fs-5 text-muted">{{ email | safe }}</span></h6>
+        <p><a href="{% url 'change_profile' %}">Изменить профиль</a></p>
         <p><a href="{% url 'change_password' %}">Изменить пароль</a></p>
         <p><a href="{% url 'logout' %}">Выйти</a></p>
     </div>

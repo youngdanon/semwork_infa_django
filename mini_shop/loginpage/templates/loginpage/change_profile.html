@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Изменение профиля{% endblock %}
+{% block pagename %}Изменение профили{% endblock %}
+{{% block short_description %}Здесь вы можете изменить имя, фамилию и аватар{% endblock %}
+{% block content %}
+
+    {% load crispy_forms_tags %}
+
+    <!--Login-->
+    <div class="container py-3 col-sm-12 col-md-10 col-lg-6">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ change_profile|crispy }}
+            <div class="col text-center">
+                <button class="btn btn-primary" type="submit">Сохранить</button>
+            </div>
+        </form>
+        {#    <p class="text-center btn">Еще нет аккаунта? <a href="{% url 'register'%}">Создать аккаунт</a>.</p>#}
+    </div>
+
+{% endblock %}
